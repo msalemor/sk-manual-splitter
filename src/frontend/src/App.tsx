@@ -28,8 +28,8 @@ interface IParseCompletion {
 }
 
 //const URI_TOKENIZE = "http://localhost:5096/api/v1/content/tokenize"
-const URI_CHUNK = "http://localhost:5096/api/v1/content/split"
-const URI_LOAD = "http://localhost:5096/api/v1/content/load"
+const URI_CHUNK = "api/v1/content/split"
+const URI_LOAD = "api/v1/content/load"
 
 function App() {
 
@@ -98,14 +98,14 @@ function App() {
             checked={settings().method === "SK"}
             onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
             value={"SK"} />
-          <label>Semantic Kernel</label>
+          <label>Semantic Kernel Splitter</label>
         </div>
         <div class="space-x-2">
           <input type='radio' name="method"
             checked={settings().method === "Paragraph"}
             onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
             value={"Paragraph"} />
-          <label>Simple Paragraph</label>
+          <label>Paragraphs</label>
         </div>
         <div class="space-x-2">
           <input type='radio' name="method"
@@ -154,7 +154,7 @@ function App() {
         <div class="flex flex-col w-full md:w-1/2 p-2 space-y-2">
           <div class="space-x-2">
             <label class="font-bold uppercase">Input Text:</label>
-            <span>{tokens()} Tokens</span>
+            <span title="Total Tokens" class='px-2 bg-blue-600 text-white rounded-xl'>{tokens()}</span>
           </div>
           <button
             onClick={Process}
@@ -170,8 +170,9 @@ function App() {
             class="w-20 p-2 bg-blue-800 hover:bg-blue-700 text-white font-semibold">Process</button>
         </div>
         <div class="flex flex-col w-full md:w-1/2 p-2 space-y-2">
-          <div>
-            <label class="font-bold uppercase">Output Chunks: </label> {parseCompletion().chunks.length}
+          <div class="space-x-2">
+            <label class="font-bold uppercase">Output Chunks: </label> <span title="Total Chunks" class='px-2 bg-blue-600 text-white rounded-xl'>{parseCompletion().chunks.length}</span> -
+            <span title="Total Tokens" class='px-2 bg-blue-600 text-white rounded-xl'>{parseCompletion().chunks.reduce((acc, chunk) => acc + chunk.tokenCount, 0)}</span>
           </div>
 
           <For each={parseCompletion().chunks}>
