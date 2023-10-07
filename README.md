@@ -1,6 +1,6 @@
 # Tokenizer and Text Splitting Tool
 
-## Run locally:
+## Run locally
 
 Type: `make run`
 
