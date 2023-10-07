@@ -1,4 +1,4 @@
-# Tokenizer and Text Splitter Tool
+# Tokenizer and Text Splitting Tool
 
 ## Run locally:
 
