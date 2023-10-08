@@ -1,20 +1,29 @@
 import axios from "axios"
 import { For, createSignal } from "solid-js"
 import { encode } from 'gpt-tokenizer'
+import { makePersisted } from "@solid-primitives/storage"
 
 interface ISettings {
   maxTokensPerLine: string
   maxTokensPerParagraph: string
   overlapTokens: string
+  wordCount: string
   method: string
   url: string
 }
 
+const SplitMethod = {
+  SK: "SK",
+  Paragraph: "Paragraph",
+  ParagraphWords: "ParagraphWords"
+}
+
 const DefaultSettings: ISettings = {
-  maxTokensPerLine: "512",
+  maxTokensPerLine: "100",
   maxTokensPerParagraph: "1024",
-  overlapTokens: "256",
-  method: "SK",
+  overlapTokens: "0",
+  wordCount: "512",
+  method: SplitMethod.SK,
   url: ""
 }
 
@@ -32,9 +41,8 @@ const URI_CHUNK = "api/v1/content/split"
 const URI_LOAD = "api/v1/content/load"
 
 function App() {
-
-  const [settings, setSettings] = createSignal<ISettings>(DefaultSettings)
-  const [text, setText] = createSignal('')
+  const [settings, setSettings] = makePersisted(createSignal<ISettings>(DefaultSettings))
+  const [text, setText] = makePersisted(createSignal(''))
   const [tokens, setTokens] = createSignal(0)
   const [parseCompletion, setParseCompletion] = createSignal<IParseCompletion>({ chunks: [] })
 
@@ -55,10 +63,11 @@ function App() {
 
   const Process = async () => {
     setParseCompletion({ chunks: [] })
+    const maxTokensPerParagraph = settings().method == SplitMethod.Paragraph ? parseInt(settings().wordCount) : parseInt(settings().maxTokensPerLine)
     const payload = {
       text: text(),
       maxTokensPerLine: parseInt(settings().maxTokensPerLine),
-      maxTokensPerParagraph: parseInt(settings().maxTokensPerParagraph),
+      maxTokensPerParagraph,
       overlapTokens: parseInt(settings().overlapTokens),
       method: settings().method
     }
@@ -95,46 +104,53 @@ function App() {
       <nav class="flex flex-row flex-wrap space-x-2 p-2 bg-blue-900 text-white">
         <div class="space-x-2">
           <input type='radio' name="method"
-            checked={settings().method === "SK"}
+            checked={settings().method === SplitMethod.SK}
             onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
-            value={"SK"} />
+            value={SplitMethod.SK} />
           <label>Semantic Kernel Splitter</label>
         </div>
         <div class="space-x-2">
           <input type='radio' name="method"
-            checked={settings().method === "Paragraph"}
+            checked={settings().method === SplitMethod.Paragraph}
             onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
-            value={"Paragraph"} />
+            value={SplitMethod.Paragraph} />
           <label>Paragraphs</label>
         </div>
         <div class="space-x-2">
           <input type='radio' name="method"
-            checked={settings().method === "ParagraphWords"}
+            checked={settings().method === SplitMethod.ParagraphWords}
             onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
-            value={"ParagraphWords"} />
+            value={SplitMethod.ParagraphWords} />
           <label>Paragraph/Words</label>
         </div>
       </nav>
       <nav class="flex flex-row flex-wrap space-x-2 p-2 bg-blue-900 text-white">
-        <div class="space-x-2" hidden={settings().method == "Paragraph"}>
+        <div class={"space-x-2"} hidden={settings().method == SplitMethod.Paragraph || settings().method == SplitMethod.ParagraphWords}>
           <label>Tokens/Line:</label>
           <input
             value={settings().maxTokensPerLine}
             onChange={(e) => setSettings({ ...settings(), maxTokensPerLine: e.currentTarget.value })}
             class="w-20 px-1 text-black" type="text" />
         </div>
-        <div class="space-x-2" hidden={settings().method == "Paragraph"}>
+        <div class="space-x-2" hidden={settings().method == SplitMethod.Paragraph || settings().method == SplitMethod.ParagraphWords}>
           <label>Tokens/Paragraph:</label>
           <input
             value={settings().maxTokensPerParagraph}
             onChange={(e) => setSettings({ ...settings(), maxTokensPerParagraph: e.currentTarget.value })}
             class="w-20 px-1 text-black" type="text" />
         </div>
-        <div class="space-x-2" hidden={settings().method == "Paragraph"}>
+        <div class="space-x-2" hidden={settings().method == SplitMethod.Paragraph || settings().method == SplitMethod.ParagraphWords}>
           <label>Overlap Tokens:</label>
           <input
             value={settings().overlapTokens}
             onChange={(e) => setSettings({ ...settings(), overlapTokens: e.currentTarget.value })}
+            class="w-20 px-1 text-black" type="text" />
+        </div>
+        <div class="space-x-2" hidden={settings().method == SplitMethod.Paragraph || settings().method == SplitMethod.SK}>
+          <label>Word Count:</label>
+          <input
+            value={settings().wordCount}
+            onChange={(e) => setSettings({ ...settings(), wordCount: e.currentTarget.value })}
             class="w-20 px-1 text-black" type="text" />
         </div>
       </nav>

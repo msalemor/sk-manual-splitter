@@ -1,12 +1,11 @@
 using backend.Models;
 using Microsoft.SemanticKernel.Text;
-using TiktokenSharp;
 
 namespace backend.Services;
 public class SplitBySkSplitter : ITextSplitter<SKSplitter>
 {
     private const string EncodingName = "cl100k_base";
-    readonly static TikToken tikToken = TikToken.GetEncoding(EncodingName);
+
 
     static List<string> Chunk(string content, int? maxTokensPerLine, int? maxTokensPerParagraph, int? overlapTokens = 256)
     {
@@ -25,7 +24,7 @@ public class SplitBySkSplitter : ITextSplitter<SKSplitter>
 
         foreach (var chunk in chunks)
         {
-            chunksInfo.Add(new ChunkInfo(chunk, tikToken.Encode(chunk).Count));
+            chunksInfo.Add(new ChunkInfo(chunk, ITextSplitter<SKSplitter>.tikToken.Encode(chunk).Count));
         }
 
         return chunksInfo;
