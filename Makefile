@@ -21,3 +21,6 @@ docker: build-ui
 docker-run: docker
 	@echo "Docker run"
 	docker run --rm -p 8080:80 am8850/tokensplitter:dev
+
+docker-push: docker
+	docker push am8850/tokensplitter:dev
