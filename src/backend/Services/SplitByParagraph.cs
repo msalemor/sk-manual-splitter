@@ -20,7 +20,7 @@ public class SplitByParagraph : ITextSplitter<ParagraphSplitter>
         foreach (var paragraph in paragraphs)
         {
             if (!string.IsNullOrEmpty(paragraph))
-                chunksInfo.Add(new ChunkInfo(paragraph, ITextSplitter<SplitByParagraph>.tikToken.Encode(paragraph).Count));
+                chunksInfo.Add(new ChunkInfo(paragraph, ITextSplitter<SplitByParagraph>.TikTokenEncoder.CountTokens(paragraph)));
         }
 
         return chunksInfo;

@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using backend.Models;
-using TiktokenSharp;
 
 namespace backend.Services;
 public class SplitByParagraphWords : ITextSplitter<ParagraphWordsSplitter>
@@ -61,7 +60,7 @@ public class SplitByParagraphWords : ITextSplitter<ParagraphWordsSplitter>
 
         foreach (var chunk in chunks)
         {
-            chunksInfo.Add(new ChunkInfo(chunk, ITextSplitter<SplitByParagraphWords>.tikToken.Encode(chunk).Count));
+            chunksInfo.Add(new ChunkInfo(chunk, ITextSplitter<SplitByParagraphWords>.TikTokenEncoder.CountTokens(chunk)));
         }
 
         return chunksInfo;

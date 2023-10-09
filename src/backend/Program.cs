@@ -1,7 +1,7 @@
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
-using TiktokenSharp;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +21,7 @@ builder.Services.AddSingleton<ITextSplitter<SKSplitter>, SplitBySkSplitter>();
 builder.Services.AddSingleton<ITextSplitter<ParagraphSplitter>, SplitByParagraph>();
 builder.Services.AddSingleton<ITextSplitter<ParagraphWordsSplitter>, SplitByParagraphWords>();
 
-var tikToken = TikToken.GetEncoding("cl100k_base");
+var tikToken = Tiktoken.Encoding.ForModel("gpt-4");
 
 var app = builder.Build();
 
