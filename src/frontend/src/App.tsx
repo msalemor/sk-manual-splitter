@@ -154,7 +154,7 @@ function App() {
             onChange={(e) => setSettings({ ...settings(), overlapTokens: e.currentTarget.value })}
             class="w-20 px-1 text-black" type="text" />
         </div>
-        <div class="space-x-2" hidden={settings().method == SplitMethod.Paragraph || settings().method == SplitMethod.SK}>
+        <div class="space-x-2" hidden={settings().method == SplitMethod.Paragraph || settings().method == SplitMethod.SK || settings().method == SplitMethod.SKTIKTOKEN}>
           <label>Word Count:</label>
           <input
             value={settings().wordCount}
