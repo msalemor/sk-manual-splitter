@@ -14,13 +14,14 @@ run: build-ui
 	@echo "Run"
 	cd src/backend && dotnet watch run
 
+TAG=0.0.4
 docker: build-ui
 	@echo "Docker"
-	cd src/backend && docker build . -t am8850/tokensplitter:dev
+	cd src/backend && docker build . -t am8850/tokensplitter:$(TAG)
 
 docker-run: docker
 	@echo "Docker run"
-	docker run --rm -p 8080:80 am8850/tokensplitter:dev
+	docker run --rm -p 8080:80 am8850/tokensplitter:$(TAG)
 
 docker-push: docker
-	docker push am8850/tokensplitter:dev
+	docker push am8850/tokensplitter:${TAG}

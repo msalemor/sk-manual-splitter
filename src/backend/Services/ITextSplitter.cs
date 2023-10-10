@@ -14,12 +14,14 @@ public interface ITextSplitter<T>
 }
 
 public class SKSplitter { }
+public class SKSplitterTiktoken { }
 public class ParagraphSplitter { }
 public class ParagraphWordsSplitter { }
 
 public enum SplitterType
 {
     SK,
+    SKTiktoken,
     Paragraph,
     ParagraphWords
 }

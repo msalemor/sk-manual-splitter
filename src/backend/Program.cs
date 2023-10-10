@@ -18,6 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ITextSplitter<SKSplitter>, SplitBySkSplitter>();
+builder.Services.AddSingleton<ITextSplitter<SKSplitterTiktoken>, SplitBySkSplitterTiktoken>();
 builder.Services.AddSingleton<ITextSplitter<ParagraphSplitter>, SplitByParagraph>();
 builder.Services.AddSingleton<ITextSplitter<ParagraphWordsSplitter>, SplitByParagraphWords>();
 
@@ -50,7 +51,7 @@ group.MapPost("/tokenize", ([FromBody] ParseRequest request) =>
 .WithOpenApi();
 
 group.MapPost("/split", ([FromBody] ParseRequest request, ITextSplitter<SKSplitter> skSplitter,
-ITextSplitter<ParagraphSplitter> paragraphSplitter, ITextSplitter<ParagraphWordsSplitter> paragraphWordSplitter) =>
+ITextSplitter<ParagraphSplitter> paragraphSplitter, ITextSplitter<ParagraphWordsSplitter> paragraphWordSplitter, ITextSplitter<SKSplitterTiktoken> skTiktokenSplitter) =>
 {
     if (string.IsNullOrEmpty(request.text))
     {
@@ -63,6 +64,10 @@ ITextSplitter<ParagraphSplitter> paragraphSplitter, ITextSplitter<ParagraphWords
     if (string.IsNullOrEmpty(splittingMethod) || request.method == SplitterType.SK.ToString())
     {
         chunks = skSplitter.ChunkText(request.text, request.maxTokensPerLine, request.maxTokensPerParagraph, request.overlapTokens) ?? new List<ChunkInfo>();
+    }
+    else if (splittingMethod == SplitterType.SKTiktoken.ToString())
+    {
+        chunks = skTiktokenSplitter.ChunkText(request.text, request.maxTokensPerLine, request.maxTokensPerParagraph, request.overlapTokens) ?? new List<ChunkInfo>();
     }
     else if (splittingMethod == SplitterType.Paragraph.ToString())
     {

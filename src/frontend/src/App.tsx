@@ -14,6 +14,7 @@ interface ISettings {
 
 const SplitMethod = {
   SK: "SK",
+  SKTIKTOKEN: "SKTiktoken",
   Paragraph: "Paragraph",
   ParagraphWords: "ParagraphWords"
 }
@@ -99,7 +100,7 @@ function App() {
   return (
     <>
       <nav class="p-2 bg-blue-950 text-white font-bold">
-        <h1 class="text-lg">Text Splitter and Tokenizer</h1>
+        <h1 class="text-lg">Text Splitter and Token Counter</h1>
       </nav>
       <nav class="flex flex-row flex-wrap space-x-2 p-2 bg-blue-900 text-white">
         <div class="space-x-2">
@@ -107,7 +108,14 @@ function App() {
             checked={settings().method === SplitMethod.SK}
             onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
             value={SplitMethod.SK} />
-          <label>Semantic Kernel Splitter</label>
+          <label>SK Splitter</label>
+        </div>
+        <div class="space-x-2">
+          <input type='radio' name="method"
+            checked={settings().method === SplitMethod.SKTIKTOKEN}
+            onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
+            value={SplitMethod.SKTIKTOKEN} />
+          <label>SK/Tiktoken Splitter</label>
         </div>
         <div class="space-x-2">
           <input type='radio' name="method"
@@ -181,9 +189,9 @@ function App() {
             onChange={(e) => { getTokenCountAfterTyping(e.currentTarget.value) }}
             onkeypress={(e) => { getTokenCountAfterTyping(e.currentTarget.value) }}
             rows={20}></textarea>
-          <button
+          {/* <button
             onClick={Process}
-            class="w-20 p-2 bg-blue-800 hover:bg-blue-700 text-white font-semibold">Process</button>
+            class="w-20 p-2 bg-blue-800 hover:bg-blue-700 text-white font-semibold">Process</button> */}
         </div>
         <div class="flex flex-col w-full md:w-1/2 p-2 space-y-2">
           <div class="space-x-2">
