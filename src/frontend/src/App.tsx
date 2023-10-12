@@ -103,19 +103,20 @@ function App() {
         <h1 class="text-lg">Text Splitter and Token Counter</h1>
       </nav>
       <nav class="flex flex-row flex-wrap space-x-2 p-2 bg-blue-900 text-white">
-        <div class="space-x-2">
-          <input type='radio' name="method"
-            checked={settings().method === SplitMethod.SK}
-            onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
-            value={SplitMethod.SK} />
-          <label>SK Splitter</label>
-        </div>
+        <label>Method:</label>
         <div class="space-x-2">
           <input type='radio' name="method"
             checked={settings().method === SplitMethod.SKTIKTOKEN}
             onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
             value={SplitMethod.SKTIKTOKEN} />
-          <label>SK/Tiktoken Splitter</label>
+          <label>SK/GPT Encoder</label>
+        </div>
+        <div class="space-x-2">
+          <input type='radio' name="method"
+            checked={settings().method === SplitMethod.SK}
+            onChange={(e) => setSettings({ ...settings(), method: e.currentTarget.value })}
+            value={SplitMethod.SK} />
+          <label>SK Default</label>
         </div>
         <div class="space-x-2">
           <input type='radio' name="method"
